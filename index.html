@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q8XF6X5PCL"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Q8XF6X5PCL');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Da Lo Mejor | Ivette Quezada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ["Montserrat", "sans-serif"],
+                        serif: ["Cormorant Garamond", "serif"],
+                    },
+                    colors: {
+                        primary: "#003559",
+                        secondary: "#EAD8CE",
+                        muted: "#E6E5DE",
+                        accent: "#A88678",
+                        sage: "#B69E85",
+                        taupe: "#8E8373",
+                        background: "#ffffff",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Montserrat', sans-serif; color: #003559; background-color: #ffffff; }
+        .font-serif { font-family: 'Cormorant Garamond', serif; }
+        @keyframes marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee-scroll 25s linear infinite;
+        }
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        /* Animation classes for StatsBubbles */
+        .stat-hidden { opacity: 0; transform: translateY(40px); }
+        .stat-hidden-left { opacity: 0; transform: translateX(-40px); }
+        .stat-visible { opacity: 1; transform: translate(0); }
+        .line-hidden-x { transform: scaleX(0); opacity: 0; }
+        .line-visible-x { transform: scaleX(1); opacity: 1; }
+        .line-hidden-y { transform: scaleY(0); opacity: 0; }
+        .line-visible-y { transform: scaleY(1); opacity: 1; }
+        nav { transition: background 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease; }
+        nav.scrolled {
+            position: fixed;
+            top: 20px;
+            left: 32px;
+            right: 32px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+        /* Page loader */
+        #page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.6s ease;
+        }
+        #page-loader.loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #page-content {
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        /* Custom cursor — desktop only */
+        @media (pointer: fine) {
+            body { cursor: none; }
+            a, button { cursor: none; }
+            #cursor-dot {
+                position: fixed;
+                top: 0; left: 0;
+                width: 8px; height: 8px;
+                border-radius: 50%;
+                background: #1a2744;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%, -50%);
+                transition: opacity 0.2s ease;
+            }
+            #cursor-ring {
+                position: fixed;
+                top: 0; left: 0;
+                width: 36px; height: 36px;
+                border-radius: 50%;
+                border: 1.5px solid #1a2744;
+                pointer-events: none;
+                z-index: 99998;
+                transform: translate(-50%, -50%);
+                transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+            }
+            #cursor-ring.is-hovering {
+                width: 52px; height: 52px;
+                border-color: #A88678;
+            }
+        }
+        /* Floating labels */
+        .field-wrap {
+            position: relative;
+        }
+        .field-wrap input,
+        .field-wrap textarea {
+            padding-top: 22px;
+            padding-bottom: 8px;
+        }
+        .field-wrap label {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            color: #bbb;
+            pointer-events: none;
+            transition: top 0.2s ease, font-size 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+        .field-wrap textarea ~ label {
+            top: 20px;
+            transform: none;
+        }
+        .field-wrap input:focus ~ label,
+        .field-wrap input:not(:placeholder-shown) ~ label,
+        .field-wrap textarea:focus ~ label,
+        .field-wrap textarea:not(:placeholder-shown) ~ label {
+            top: 8px;
+            transform: none;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            color: #9e7b6b;
+        }
+        .field-wrap input:focus ~ label,
+        .field-wrap textarea:focus ~ label {
+            color: #1a2744;
+        }
+        /* Pricing card hover */
+        #mentorias .grid > [data-animate] {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #mentorias .grid > [data-animate]:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+        #mentorias .grid > [data-animate]:hover > a:last-of-type {
+            background-color: #1a2744;
+        }
+        #mentorias .grid > [data-animate] > a:last-of-type {
+            transition: background-color 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        /* =============================================
+           BUTTON EFFECTS
+           ============================================= */
+
+        /* 1. Shimmer + lift — filled rounded buttons */
+        a.rounded-full.bg-accent, a.rounded-full.bg-primary,
+        a.rounded-full.bg-sage,   a.rounded-full.bg-taupe,
+        button.rounded-full.bg-accent, button.rounded-full.bg-primary,
+        button.rounded-full.bg-sage,   button.rounded-full.bg-taupe {
+            position: relative;
+            overflow: hidden;
+        }
+        a.rounded-full.bg-accent::before, a.rounded-full.bg-primary::before,
+        a.rounded-full.bg-sage::before,   a.rounded-full.bg-taupe::before,
+        button.rounded-full.bg-accent::before, button.rounded-full.bg-primary::before,
+        button.rounded-full.bg-sage::before,   button.rounded-full.bg-taupe::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+            transform: skewX(-20deg);
+            transition: left 0.55s ease;
+            pointer-events: none;
+        }
+        a.rounded-full.bg-accent:hover::before, a.rounded-full.bg-primary:hover::before,
+        a.rounded-full.bg-sage:hover::before,   a.rounded-full.bg-taupe:hover::before,
+        button.rounded-full.bg-accent:hover::before, button.rounded-full.bg-primary:hover::before,
+        button.rounded-full.bg-sage:hover::before,   button.rounded-full.bg-taupe:hover::before {
+            left: 150%;
+        }
+        a.rounded-full.bg-accent:hover, a.rounded-full.bg-primary:hover,
+        a.rounded-full.bg-sage:hover,   a.rounded-full.bg-taupe:hover,
+        button.rounded-full.bg-accent:hover, button.rounded-full.bg-primary:hover,
+        button.rounded-full.bg-sage:hover,   button.rounded-full.bg-taupe:hover {
+            transform: translateY(-2px);
+            letter-spacing: 0.16em;
+            transition: all 0.3s ease;
+        }
+
+        /* 2. Border draw — outline/ghost rounded buttons */
+        a.rounded-full.bg-transparent[class*="border-primary"],
+        button.rounded-full.bg-transparent[class*="border-primary"] {
+            position: relative;
+            overflow: hidden;
+        }
+        a.rounded-full.bg-transparent[class*="border-primary"]::before,
+        button.rounded-full.bg-transparent[class*="border-primary"]::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            border: 1.5px solid #003559;
+            transform: scale(0.85);
+            opacity: 0;
+            transition: transform 0.35s ease, opacity 0.35s ease;
+            pointer-events: none;
+        }
+        a.rounded-full.bg-transparent[class*="border-primary"]:hover::before,
+        button.rounded-full.bg-transparent[class*="border-primary"]:hover::before {
+            transform: scale(1);
+            opacity: 1;
+        }
+        a.rounded-full.bg-transparent[class*="border-primary"]:hover,
+        button.rounded-full.bg-transparent[class*="border-primary"]:hover {
+            transform: translateY(-2px);
+            letter-spacing: 0.16em;
+            transition: all 0.3s ease;
+        }
+
+        /* 4. Full-width card CTAs — shimmer only, no letter-spacing */
+        a[class*="+56px"] {
+            position: relative;
+            overflow: hidden;
+        }
+        a[class*="+56px"]::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+            transform: skewX(-20deg);
+            transition: left 0.55s ease;
+            pointer-events: none;
+        }
+        a[class*="+56px"]:hover::before { left: 150%; }
+        a[class*="+56px"]:hover {
+            transform: translateY(-2px);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        /* Fix: logo in navbar */
+        nav img { max-height: 44px !important; width: auto !important; }
+
+        /* Fix: isotipo in marquee */
+        .animate-marquee img { height: 40px !important; width: auto !important; max-width: none !important; }
+
+        /* Fix: WordPress theme overriding blockquote styles */
+        #contacto blockquote { border: none !important; border-left: none !important; padding-left: 0 !important; margin: 0 auto 4rem !important; }
+
+        /* Hero background: desktop vs mobile */
+        #inicio {
+          background-image: url('https://vibe.filesafe.space/1776018433860772785/assets/45352170-491b-4297-b8c8-a5cf17d544f1.jpg');
+        }
+        @media (max-width: 767px) {
+          #inicio {
+            background-image: url('Ivette-Quezada-Profile.jpg');
+          }
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <meta name="description" content="Mentoría y coaching para mujeres de más de 50 que quieren rediseñar su próximo capítulo con claridad, propósito y dirección.">
+</head>
+<body>
+<div id="page-loader">
+    <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/3a677a93-41de-4441-b297-94fd5a186b8d.png" alt="Da Lo Mejor" style="height:48px;width:auto;">
+  </div>
+
+  <div id="page-content">
+
+    <!-- Navbar -->
+    <nav class="absolute left-4 right-4 top-4 z-50 flex h-[68px] items-center justify-between rounded-full bg-white px-4 shadow-lg md:left-8 md:right-8 md:top-5 md:px-9 lg:left-12 lg:right-12">
+      <a href="#inicio" class="flex-shrink-0">
+        <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/3a677a93-41de-4441-b297-94fd5a186b8d.png" alt="Da Lo Mejor" class="h-9 lg:h-11">
+      </a>
+
+      <!-- Desktop Menu -->
+      <ul class="hidden items-center gap-9 lg:flex">
+        <li><a href="#inicio" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-colors hover:text-accent">Inicio</a></li>
+        <li><a href="#mentorias" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-colors hover:text-accent">Mentorías</a></li>
+        <li><a href="#resultados" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-colors hover:text-accent">Resultados</a></li>
+        <li><a href="#como-funciona" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-colors hover:text-accent">Cómo Funciona</a></li>
+        <li><a href="#sobre-ivette" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-colors hover:text-accent">Sobre Ivette</a></li>
+      </ul>
+
+      <!-- CTA Button -->
+      <a href="#contacto" class="hidden rounded-full border-[1.5px] border-primary bg-transparent px-[22px] py-[9px] text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-all hover:bg-primary hover:text-white lg:inline-block">
+        Comienza Hoy
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button id="mobile-menu-btn" class="p-2 lg:hidden text-primary" aria-label="Menú">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+      </button>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden absolute left-0 right-0 top-[calc(100%+8px)] flex flex-col gap-5 rounded-[20px] bg-white p-6 shadow-xl lg:hidden">
+        <a href="#inicio" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary mobile-link">Inicio</a>
+        <a href="#mentorias" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary mobile-link">Mentorías</a>
+        <a href="#resultados" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary mobile-link">Resultados</a>
+        <a href="#como-funciona" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary mobile-link">Cómo Funciona</a>
+        <a href="#sobre-ivette" class="text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary mobile-link">Sobre Ivette</a>
+        <a href="#contacto" class="inline-block text-center rounded-full border-[1.5px] border-primary bg-primary px-[22px] py-[12px] text-[10.5px] font-semibold uppercase tracking-[0.13em] text-white mobile-link">Comienza Hoy</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="inicio" class="relative grid grid-cols-1 md:grid-cols-2 min-h-screen items-end md:items-center bg-cover bg-center bg-no-repeat">
+      <div class="absolute inset-0 bg-black/10"></div>
+      <div class="col-start-1 hidden md:block"></div>
+      <div class="col-start-1 md:col-start-2 flex items-center justify-center pr-0 md:pr-[6%] pb-10 md:py-20 relative z-10">
+      <div class="relative z-10 flex w-[90%] flex-col items-center justify-center rounded-[28px] bg-white/80 p-8 text-center shadow-2xl backdrop-blur-md md:w-full md:p-12">
+        <p id="hero-eyebrow" class="mb-2.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-primary">DESPUÉS DE LOS 50, NO TE REINVENTAS...</p>
+        <h1 id="hero-h1" class="mb-5 font-serif text-4xl italic leading-[1.1] text-primary lg:text-[52px]">te rediseñas con claridad</h1>
+        <p id="hero-desc" class="mb-10 max-w-[360px] text-[14px] leading-[1.75] text-primary">Diseña tu próximo capítulo con un plan claro, propósito y dirección sin sentirte perdida ni abrumada.</p>
+        <div id="hero-btns" class="flex flex-wrap justify-center gap-3.5">
+          <a href="#contacto" class="inline-block rounded-full bg-accent px-[30px] py-[14px] text-[10.5px] font-semibold uppercase tracking-[0.13em] text-white transition-colors hover:bg-[#96756a]">Agendar Cita</a>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- StatsBubbles -->
+    <section id="stats-section" class="bg-muted px-6 py-20 lg:py-32 overflow-hidden">
+      <div class="mx-auto max-w-[1200px]">
+        <div class="flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
+          
+          <!-- Introducción -->
+          <div id="stat-intro" class="lg:w-1/3 text-center lg:text-left transition-all duration-1000 stat-hidden">
+            <h2 class="mb-6 font-serif text-[38px] lg:text-[54px] font-normal leading-[1.15] text-primary">Vivimos más años que nunca</h2>
+            <p class="text-[18px] lg:text-[20px] leading-relaxed text-taupe">El modelo tradicional de vida ya no es suficiente.</p>
+          </div>
+
+          <!-- Línea de tiempo -->
+          <div class="lg:w-2/3 w-full relative">
+            
+            <!-- Desktop Horizontal Timeline -->
+            <div class="hidden md:flex relative w-full h-[240px] items-center justify-between">
+              <div id="stat-line-x" class="absolute left-0 right-0 top-1/2 h-[1px] bg-primary/20 -translate-y-1/2 transition-all duration-1000 delay-300 origin-left line-hidden-x"></div>
+              
+              <div class="stat-item relative z-10 flex flex-col items-center w-1/4 transition-all duration-700 stat-hidden" style="transition-delay: 400ms;">
+                <div class="h-[100px] flex items-end pb-6"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Rediseña</p></div>
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shadow-sm bg-accent"></div>
+                <div class="h-[100px] flex items-start pt-6 invisible"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Rediseña</p></div>
+              </div>
+              
+              <div class="stat-item relative z-10 flex flex-col items-center w-1/4 transition-all duration-700 stat-hidden" style="transition-delay: 550ms;">
+                <div class="h-[100px] flex items-end pb-6 invisible"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Descúbrete</p></div>
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shadow-sm bg-sage"></div>
+                <div class="h-[100px] flex items-start pt-6"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Descúbrete</p></div>
+              </div>
+              
+              <div class="stat-item relative z-10 flex flex-col items-center w-1/4 transition-all duration-700 stat-hidden" style="transition-delay: 700ms;">
+                <div class="h-[100px] flex items-end pb-6"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Conecta con tu propósito</p></div>
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shadow-sm bg-primary"></div>
+                <div class="h-[100px] flex items-start pt-6 invisible"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Conecta con tu propósito</p></div>
+              </div>
+              
+              <div class="stat-item relative z-10 flex flex-col items-center w-1/4 transition-all duration-700 stat-hidden" style="transition-delay: 850ms;">
+                <div class="h-[100px] flex items-end pb-6 invisible"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Crea nuevas etapas con intención</p></div>
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shadow-sm bg-taupe"></div>
+                <div class="h-[100px] flex items-start pt-6"><p class="text-center font-serif text-[22px] lg:text-[26px] text-primary leading-tight px-2">Crea nuevas etapas con intención</p></div>
+              </div>
+            </div>
+
+            <!-- Mobile Vertical Timeline -->
+            <div class="md:hidden relative flex flex-col gap-10 py-4 pl-4">
+              <div id="stat-line-y" class="absolute left-[23px] top-0 bottom-0 w-[1px] bg-primary/20 transition-all duration-1000 delay-300 origin-top line-hidden-y"></div>
+              
+              <div class="stat-item-mob relative z-10 flex items-center gap-6 transition-all duration-700 stat-hidden-left" style="transition-delay: 400ms;">
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shrink-0 shadow-sm bg-accent"></div>
+                <p class="font-serif text-[24px] text-primary leading-tight">Rediseña</p>
+              </div>
+              <div class="stat-item-mob relative z-10 flex items-center gap-6 transition-all duration-700 stat-hidden-left" style="transition-delay: 550ms;">
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shrink-0 shadow-sm bg-sage"></div>
+                <p class="font-serif text-[24px] text-primary leading-tight">Descúbrete</p>
+              </div>
+              <div class="stat-item-mob relative z-10 flex items-center gap-6 transition-all duration-700 stat-hidden-left" style="transition-delay: 700ms;">
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shrink-0 shadow-sm bg-primary"></div>
+                <p class="font-serif text-[24px] text-primary leading-tight">Conecta con tu propósito</p>
+              </div>
+              <div class="stat-item-mob relative z-10 flex items-center gap-6 transition-all duration-700 stat-hidden-left" style="transition-delay: 850ms;">
+                <div class="w-3.5 h-3.5 rounded-full ring-4 ring-muted shrink-0 shadow-sm bg-taupe"></div>
+                <p class="font-serif text-[24px] text-primary leading-tight">Crea nuevas etapas con intención</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="mentorias" class="bg-white px-7 py-[72px] text-center lg:px-14 lg:py-[100px]">
+      <h2 data-animate="" class="mb-16 font-serif text-[32px] font-normal text-primary lg:text-[44px]">Elige cómo quieres transformar tu próxima etapa</h2>
+      <div class="mx-auto grid max-w-[1060px] grid-cols-1 gap-7 lg:grid-cols-3">
+        
+        <div data-animate="" class="flex flex-col items-center overflow-hidden rounded-[24px] bg-muted px-7 pt-12 text-center">
+          <div class="mb-5 flex h-14 w-14 items-center justify-center text-primary">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><circle cx="24" cy="14" r="7"></circle><path d="M24 21c-7 0-12 5-12 11h24c0-6-5-11-12-11z"></path><path d="M18 17c-2 3-2 7 1 9"></path><path d="M30 17c2 3 2 7-1 9"></path><path d="M20 26c0 0 2 3 4 3s4-3 4-3"></path></svg>
+          </div>
+          <h3 class="mb-3.5 text-[15px] font-bold uppercase tracking-[0.08em] text-primary">Mi Viaje Interior (Online)</h3>
+          <p class="mb-4 text-[15px] font-normal leading-[1.7] text-primary">Diseña tu vida desde casa en 21 días</p>
+          <ul class="mb-7 w-full text-center">
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Identifica en qué etapa estás hoy</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Obtén claridad sobre lo que quieres</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Crea un plan de próximos pasos</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Incluye un test inicial de autodiagnóstico</li>
+          </ul>
+          <a href="#contacto" class="mt-auto block w-[calc(100%+56px)] bg-accent py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#96756a]">AGENDAR UNA CITA</a>
+        </div>
+
+        <div data-animate="" class="flex flex-col items-center overflow-hidden rounded-[24px] bg-muted px-7 pt-12 text-center">
+          <div class="mb-5 flex h-14 w-14 items-center justify-center text-primary">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><path d="M6 10c9 0 14 3 18 8c4-5 9-8 18-8v26c-9 0-14 3-18 8c-4-5-9-8-18-8z"></path><line x1="24" y1="18" x2="24" y2="44"></line></svg>
+          </div>
+          <h3 class="mb-3.5 text-[15px] font-bold uppercase tracking-[0.08em] text-primary">Mentoría Personalizada 1:1</h3>
+          <p class="mb-4 text-[15px] font-normal leading-[1.7] text-primary">Trabaja directamente conmigo para diseñar tu próximo capítulo con acompañamiento cercano</p>
+          <ul class="mb-7 w-full text-center">
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Sesiones personalizadas</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Profundidad emocional</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Decisiones guiadas</li>
+          </ul>
+          <a href="#contacto" class="mt-auto block w-[calc(100%+56px)] bg-accent py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#96756a]">AGENDAR UNA CITA</a>
+        </div>
+
+        <div data-animate="" class="flex flex-col items-center overflow-hidden rounded-[24px] bg-muted px-7 pt-12 text-center">
+          <div class="mb-5 flex h-14 w-14 items-center justify-center text-primary">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg" class="w-full h-full"><circle cx="24" cy="10" r="5"></circle><path d="M24 15v8"></path><path d="M14 30c0-5.5 4.5-7 10-7s10 1.5 10 7"></path><path d="M14 30c-3 1-5 4-5 7"></path><path d="M34 30c3 1 5 4 5 7"></path><path d="M9 37h30"></path><path d="M20 23c-4 0-7 2-7 5"></path><path d="M28 23c4 0 7 2 7 5"></path></svg>
+          </div>
+          <h3 class="mb-3.5 text-[15px] font-bold uppercase tracking-[0.08em] text-primary">Experiencia Transformacional Presencial</h3>
+          <p class="mb-4 text-[15px] font-normal leading-[1.7] text-primary">Un espacio exclusivo para mujeres listas para rediseñar su vida</p>
+          <ul class="mb-7 w-full text-center">
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Experiencia inmersiva</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Acompañamiento directo</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Transformación profunda</li>
+            <li class="py-1 text-[14px] font-medium leading-[1.6] text-primary"><span class="font-semibold text-accent">→</span> Cupo Limitado. Requiere aplicación previa</li>
+          </ul>
+          <a href="#contacto" class="mt-auto block w-[calc(100%+56px)] bg-accent py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#96756a]">AGENDAR UNA CITA</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PainPoints -->
+    <section id="resultados" class="relative bg-[#dfc9be] px-7 py-[72px] lg:px-14 lg:pb-20 lg:pt-[72px]">
+      <div class="absolute -top-[1px] left-0 w-full overflow-hidden leading-[0]">
+        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="block h-[50px] w-full"><path d="M0,0 L0,25 Q180,50 360,25 Q540,0 720,25 Q900,50 1080,25 Q1260,0 1440,25 L1440,0 Z" fill="#ffffff"></path></svg>
+      </div>
+
+      <div class="mx-auto max-w-[780px] pt-5">
+        <div class="mb-11 flex flex-col justify-center sm:flex-row">
+          <button id="tab-hoy" class="rounded-t-[20px] sm:rounded-l-full sm:rounded-tr-none border-[1.5px] sm:border-r-0 border-primary px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.13em] transition-all bg-primary text-white">Tu Persona Hoy</button>
+          <button id="tab-mejor" class="rounded-b-[20px] sm:rounded-r-full sm:rounded-bl-none border-[1.5px] sm:border-l-0 border-t-0 sm:border-t-[1.5px] border-primary px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.13em] transition-all bg-transparent text-primary">Con Da Lo Mejor</button>
+        </div>
+
+        <div class="rounded-[20px] bg-white px-7 py-10 text-center shadow-2xl lg:px-[52px] lg:py-11">
+          
+          <div id="content-hoy" class="fade-in">
+            <h2 class="mb-4 font-serif text-[26px] font-normal leading-[1.4] text-primary">No es que no sepas qué hacer...<br>Es que nadie te enseñó a diseñar esta etapa de tu vida.</h2>
+            <p class="mb-9 text-[14px] text-taupe">Si tienes más de 50, puede que estés sintiendo:</p>
+            <div class="mb-9 grid grid-cols-1 gap-3.5 md:grid-cols-2">
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-accent text-white border-transparent">"Ya hice mucho... pero no sé qué sigue"</div>
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-sage text-white border-transparent">Falta de claridad sobre tu propósito hoy</div>
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-taupe text-white border-transparent">Sensación de estancamiento</div>
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-primary text-white border-transparent">Miedo a tomar decisiones equivocadas</div>
+            </div>
+            <p class="mb-9 font-serif text-[22px] font-normal italic text-primary">No estás perdida. Estás en transición.</p>
+            <a href="#contacto" class="inline-block rounded-full bg-primary px-[34px] py-[14px] text-[10.5px] font-semibold uppercase tracking-[0.13em] text-white transition-colors hover:bg-[#004584]">Empieza Hoy</a>
+          </div>
+
+          <div id="content-mejor" class="fade-in hidden">
+            <h2 class="mb-4 font-serif text-[26px] font-normal leading-[1.4] text-primary">Con Da Lo Mejor,<br>diseñas tu próximo capítulo con intención.</h2>
+            <p class="mb-9 text-[14px] text-taupe">Cuando trabajas con nosotros, obtienes:</p>
+            <div class="mb-9 grid grid-cols-1 gap-3.5 md:grid-cols-2">
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-sage text-white border-transparent">Claridad sobre quién eres hoy y hacia dónde vas</div>
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-primary text-white border-transparent">Un plan real y accionable para tu próxima etapa</div>
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-accent text-white border-transparent">Dirección sin agobio ni presión</div>
+              <div class="flex min-h-[72px] items-center justify-center rounded-lg border p-4 text-[13px] font-medium leading-[1.5] bg-taupe text-white border-transparent">Acompañamiento experto en cada paso</div>
+            </div>
+            <p class="mb-9 font-serif text-[22px] font-normal italic text-primary">Tu siguiente capítulo empieza aquí.</p>
+            <a href="#contacto" class="inline-block rounded-full bg-primary px-[34px] py-[14px] text-[10.5px] font-semibold uppercase tracking-[0.13em] text-white transition-colors hover:bg-[#004584]">Comienza Hoy</a>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="absolute -bottom-[1px] left-0 w-full overflow-hidden leading-[0]">
+        <svg viewBox="0 0 1440 50" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="block h-[50px] w-full"><path d="M0,50 L0,25 Q180,0 360,25 Q540,50 720,25 Q900,0 1080,25 Q1260,50 1440,25 L1440,50 Z" fill="#ffffff"></path></svg>
+      </div>
+    </section>
+
+    <!-- HowItWorks -->
+    <section id="como-funciona" class="bg-white px-7 py-[72px] lg:px-14 lg:py-[100px]">
+      <h2 data-animate="" class="mb-14 text-center font-serif text-[32px] font-normal text-primary lg:mb-[60px] lg:text-[40px]">Cómo Funciona</h2>
+      <div class="mx-auto mb-11 flex max-w-[680px] flex-col items-center justify-center gap-8 md:flex-row md:flex-nowrap md:gap-0">
+        
+        <div data-animate="" class="w-[160px] shrink-0 text-center">
+          <div class="mx-auto mb-3.5 flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#B69E85] text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </div>
+          <p class="mb-1.5 text-[14px] font-bold uppercase tracking-[0.05em] text-primary">Paso 1</p>
+          <p class="text-[15px] leading-[1.5] text-primary">Descubres dónde estás</p>
+        </div>
+
+        <div class="hidden h-[2px] w-full bg-[#B69E85] md:block md:-mt-10 md:w-auto md:flex-1"></div>
+
+        <div data-animate="" class="w-[160px] shrink-0 text-center">
+          <div class="mx-auto mb-3.5 flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#B69E85] text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"></path><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"></path><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"></path></svg>
+          </div>
+          <p class="mb-1.5 text-[14px] font-bold uppercase tracking-[0.05em] text-primary">Paso 2</p>
+          <p class="text-[15px] leading-[1.5] text-primary">Clarificas lo que quieres</p>
+        </div>
+
+        <div class="hidden h-[2px] w-full bg-[#B69E85] md:block md:-mt-10 md:w-auto md:flex-1"></div>
+
+        <div data-animate="" class="w-[160px] shrink-0 text-center">
+          <div class="mx-auto mb-3.5 flex h-[68px] w-[68px] items-center justify-center rounded-full bg-[#B69E85] text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="m9 14 2 2 4-4"></path></svg>
+          </div>
+          <p class="mb-1.5 text-[14px] font-bold uppercase tracking-[0.05em] text-primary">Paso 3</p>
+          <p class="text-[15px] leading-[1.5] text-primary">Diseñas tu próximo capítulo</p>
+        </div>
+
+      </div>
+
+      <div class="mb-[72px] text-center">
+        <a href="#contacto" class="inline-block rounded-full border-[1.5px] border-primary bg-transparent px-[30px] py-[14px] text-[10.5px] font-semibold uppercase tracking-[0.13em] text-primary transition-colors hover:bg-primary hover:text-white">Agendar Cita</a>
+      </div>
+
+      <div class="mx-auto grid max-w-[940px] grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div class="relative">
+          <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/f5a75cec-8514-4c27-95a3-62061a062e78.png" alt="Ivette en taller" class="h-[420px] w-full rounded-[10px] object-cover">
+        </div>
+        <div>
+          <h3 class="mb-3.5 font-serif text-[24px] font-medium text-primary">Es un espacio donde:</h3>
+          <ul class="mb-7">
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Te sientes escuchada</li>
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Te das permiso de empezar de nuevo</li>
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Recuperas ilusión por tu futuro</li>
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Vuelves a sentir dirección</li>
+          </ul>
+          
+          <h3 class="mb-3.5 mt-7 font-serif text-[24px] font-medium text-primary">Qué incluye:</h3>
+          <ul class="mb-2.5">
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Método estructurado paso a paso</li>
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Ejercicios guiados</li>
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Proceso de autodescubrimiento</li>
+            <li class="relative py-1.5 pl-6 text-[14px] leading-[1.6] text-taupe"><span class="absolute left-0 top-2.5 flex h-3.5 w-3.5 items-center justify-center text-accent"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></span>Acompañamiento (según modalidad)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="sobre-ivette" class="bg-white py-20">
+      <div class="mb-20 overflow-hidden bg-primary py-5">
+        <div class="flex w-max animate-marquee gap-12">
+          <!-- Marquee Item Set 1 -->
+          <div class="flex gap-12">
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Test De Claridad Personal
+            </span>
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Guía de propósito después de los 50
+            </span>
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Plantilla de diseño de vida
+            </span>
+          </div>
+          <!-- Marquee Item Set 2 -->
+          <div class="flex gap-12">
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Test De Claridad Personal
+            </span>
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Guía de propósito después de los 50
+            </span>
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Plantilla de diseño de vida
+            </span>
+          </div>
+          <!-- Marquee Item Set 3 -->
+          <div class="flex gap-12">
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Test De Claridad Personal
+            </span>
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Guía de propósito después de los 50
+            </span>
+            <span class="flex items-center gap-6 whitespace-nowrap font-serif text-[22px] text-white">
+              <img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/ec6bb2b5-fa6b-4c37-b3f7-04a7d3bc9122.png" alt="Isotipo" class="h-10 w-auto"> Plantilla de diseño de vida
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto grid max-w-[940px] grid-cols-1 items-center gap-10 px-7 lg:grid-cols-2 lg:gap-20 lg:px-[60px]">
+        <div data-animate="" class="order-2 lg:order-1">
+          <h2 class="mb-7 font-serif text-[34px] font-normal leading-[1.3] text-primary">Acompañamiento con experiencia real para una etapa que requiere claridad</h2>
+          <p class="mb-4.5 text-[14px] leading-[1.85] text-taupe">Durante más de 35 años trabajé en el mundo corporativo, acompañando procesos de crecimiento, cambio, mentoría, coaching y toma de decisión.</p>
+          <p class="mb-4.5 text-[14px] leading-[1.85] text-taupe">En un momento clave de mi vida, decidí hacer lo mismo conmigo: detenerme, cuestionarme, y rediseñar mi propio camino con intención.</p>
+          <p class="mb-4.5 text-[14px] leading-[1.85] text-taupe">Hoy acompaño a mujeres de más de 50 que están en una etapa de transición: mujeres que saben que han vivido mucho, pero saben que aún hay más por construir.</p>
+        </div>
+        <div class="relative order-1 lg:order-2">
+          <div class="absolute inset-0 z-0 -translate-x-4 translate-y-4 rounded-[16px] bg-accent"></div>
+          <img decoding="async" src="PHOTO-2026-04-12-18-32-59.jpg" alt="Ivette Quezada" class="relative z-10 h-[400px] lg:h-[500px] w-full rounded-[16px] object-cover">
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contacto" class="relative bg-accent px-7 py-[72px] text-center lg:px-14 lg:py-[100px]">
+      <div class="absolute -top-[1px] left-0 w-full overflow-hidden leading-[0]">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" class="block h-[60px] w-full"><path d="M0,60 C480,0 960,0 1440,60 L1440,0 L0,0 Z" fill="#ffffff"></path></svg>
+      </div>
+
+      <blockquote class="mx-auto mb-16 max-w-[680px] font-serif text-[28px] font-normal italic leading-[1.45] text-white lg:text-[34px]">
+        "No necesitas tener todo claro para empezar...<br>sólo estar lista para mirarte con honestidad."
+      </blockquote>
+
+      <div class="mx-auto max-w-[900px] rounded-[18px] overflow-hidden">
+        <div class="calendly-inline-widget" data-url="https://calendly.com/dalomejorhoy/30min" style="min-width:320px;height:700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async=""></script>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="grid grid-cols-1 gap-9 bg-muted px-7 py-12 sm:grid-cols-2 lg:grid-cols-[80px_1fr_1fr] lg:gap-14 lg:px-[60px] lg:py-[52px]">
+      <div><img decoding="async" src="https://vibe.filesafe.space/1776018433860772785/assets/77195323-fb20-4089-9d96-ca523ea2ed58.png" alt="Da Lo Mejor" class="h-auto w-[72px]"></div>
+      <div>
+        <h4 class="mb-3 text-[13px] font-semibold tracking-[0.02em] text-primary">Contacto</h4>
+        <a href="mailto:hola@ivettequezada.com" class="block text-[13px] leading-[1.9] text-taupe transition-colors hover:text-primary">hola@ivettequezada.com</a>
+        <a href="tel:+50763735035" class="block text-[13px] leading-[1.9] text-taupe transition-colors hover:text-primary">+507 6373-5035</a>
+        <h4 class="mb-3 mt-5 text-[13px] font-semibold tracking-[0.02em] text-primary">Redes Sociales</h4>
+        <div class="flex gap-2.5">
+          <a href="https://www.tiktok.com/@dalomejor50plus" target="_blank" class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-accent"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"></path></svg></a>
+          <a href="https://www.instagram.com/dalomejor50plus" target="_blank" class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-accent"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg></a>
+          <a href="https://www.linkedin.com/in/ivette-townshend-quezada/" target="_blank" class="flex h-[34px] w-[34px] items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-accent"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="mb-3 text-[13px] font-semibold tracking-[0.02em] text-primary">Descargo de responsabilidad</h4>
+        <p class="text-[12.5px] leading-[1.75] text-taupe">Este proceso de mentoría está enfocado en desarrollo personal, claridad y bienestar. No sustituye terapia psicológica, asesoría médica, financiera o legal. Los resultados dependen del compromiso personal de cada participante.</p>
+      </div>
+    </footer>
+    <div class="h-[5px] bg-primary"></div>
+    <div style="width:100%;background:#003559;padding:12px 24px;text-align:center;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:500;letter-spacing:0.08em;color:rgba(255,255,255,0.6);">
+      Diseño por <a href="https://elevendesign.net/" target="_blank" style="color:#ffffff;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Eleven Design</a>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+      // Hero text reveal
+      (function() {
+        // Split h1 words into mask spans for clip reveal
+        const h1 = document.getElementById('hero-h1');
+        const words = h1.textContent.trim().split(/\s+/);
+        h1.innerHTML = words.map(w =>
+          `<span style="display:inline-block;overflow:hidden;vertical-align:bottom"><span class="hw" style="display:inline-block">${w}</span></span>`
+        ).join(' ');
+
+        // Set initial states
+        gsap.set('#hero-eyebrow', { opacity: 0, y: 20 });
+        gsap.set('.hw',           { y: '110%' });
+        gsap.set('#hero-desc',    { opacity: 0, y: 16 });
+        gsap.set('#hero-btns a',  { opacity: 0, scale: 0.9 });
+
+        gsap.timeline({ delay: 0.3 })
+          .to('#hero-eyebrow', { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' })
+          .to('.hw',           { y: '0%', duration: 0.55, ease: 'power2.out', stagger: 0.07 }, '-=0.1')
+          .to('#hero-desc',    { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, '-=0.15')
+          .to('#hero-btns a',  { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(1.4)', stagger: 0.1 }, '-=0.1');
+      })();
+
+      // GSAP ScrollTrigger animations
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.set('[data-animate]', { opacity: 0, y: 40 });
+      ScrollTrigger.batch('[data-animate]', {
+        onEnter: batch => gsap.to(batch, {
+          opacity: 1, y: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          stagger: 0.15,
+        }),
+        start: 'top 88%',
+      });
+
+      // Mobile Menu Toggle
+      const mobileBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileLinks = document.querySelectorAll('.mobile-link');
+
+      mobileBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+        });
+      });
+
+      // Navbar scroll behavior
+      const mainNav = document.querySelector('nav');
+      window.addEventListener('scroll', () => {
+        mainNav.classList.toggle('scrolled', window.scrollY > 80);
+      });
+
+      // PainPoints Tabs
+      const tabHoy = document.getElementById('tab-hoy');
+      const tabMejor = document.getElementById('tab-mejor');
+      const contentHoy = document.getElementById('content-hoy');
+      const contentMejor = document.getElementById('content-mejor');
+
+      tabHoy.addEventListener('click', () => {
+        tabHoy.className = "rounded-t-[20px] sm:rounded-l-full sm:rounded-tr-none border-[1.5px] sm:border-r-0 border-primary px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.13em] transition-all bg-primary text-white";
+        tabMejor.className = "rounded-b-[20px] sm:rounded-r-full sm:rounded-bl-none border-[1.5px] sm:border-l-0 border-t-0 sm:border-t-[1.5px] border-primary px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.13em] transition-all bg-transparent text-primary";
+        contentHoy.classList.remove('hidden');
+        contentMejor.classList.add('hidden');
+      });
+
+      tabMejor.addEventListener('click', () => {
+        tabMejor.className = "rounded-b-[20px] sm:rounded-r-full sm:rounded-bl-none border-[1.5px] sm:border-l-0 border-t-0 sm:border-t-[1.5px] border-primary px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.13em] transition-all bg-primary text-white";
+        tabHoy.className = "rounded-t-[20px] sm:rounded-l-full sm:rounded-tr-none border-[1.5px] sm:border-r-0 border-primary px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.13em] transition-all bg-transparent text-primary";
+        contentMejor.classList.remove('hidden');
+        contentHoy.classList.add('hidden');
+      });
+
+      // StatsBubbles Animation Intersection Observer
+      const statsSection = document.getElementById('stats-section');
+      const statIntro = document.getElementById('stat-intro');
+      const statLineX = document.getElementById('stat-line-x');
+      const statLineY = document.getElementById('stat-line-y');
+      const statItems = document.querySelectorAll('.stat-item');
+      const statItemsMob = document.querySelectorAll('.stat-item-mob');
+
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          statIntro.classList.remove('stat-hidden');
+          statIntro.classList.add('stat-visible');
+          
+          if(statLineX) {
+             statLineX.classList.remove('line-hidden-x');
+             statLineX.classList.add('line-visible-x');
+          }
+          if(statLineY) {
+             statLineY.classList.remove('line-hidden-y');
+             statLineY.classList.add('line-visible-y');
+          }
+
+          statItems.forEach(item => {
+            item.classList.remove('stat-hidden');
+            item.classList.add('stat-visible');
+          });
+
+          statItemsMob.forEach(item => {
+            item.classList.remove('stat-hidden-left');
+            item.classList.add('stat-visible');
+          });
+
+          observer.disconnect();
+        }
+      }, { threshold: 0.1 });
+
+      if (statsSection) {
+        observer.observe(statsSection);
+      }
+
+    </script>
+
+  </div><!-- /#page-content -->
+
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+
+  <script>
+    window.addEventListener('load', function() {
+      const loader  = document.getElementById('page-loader');
+      const content = document.getElementById('page-content');
+      content.style.opacity = '1';
+      loader.classList.add('loader-hidden');
+      loader.addEventListener('transitionend', function() {
+        loader.style.display = 'none';
+      }, { once: true });
+    });
+
+    // Custom cursor (desktop only)
+    if (window.matchMedia('(pointer: fine)').matches) {
+      const dot  = document.getElementById('cursor-dot');
+      const ring = document.getElementById('cursor-ring');
+      let mx = 0, my = 0;   // mouse position
+      let rx = 0, ry = 0;   // ring position (lerped)
+
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX;
+        my = e.clientY;
+        dot.style.left = mx + 'px';
+        dot.style.top  = my + 'px';
+      });
+
+      (function lerp() {
+        rx += (mx - rx) * 0.12;
+        ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px';
+        ring.style.top  = ry + 'px';
+        requestAnimationFrame(lerp);
+      })();
+
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => ring.classList.add('is-hovering'));
+        el.addEventListener('mouseleave', () => ring.classList.remove('is-hovering'));
+      });
+    }
+
+    // Ripple on click
+    document.querySelectorAll('a.rounded-full, button, a[class*="+56px"]').forEach(el => {
+      el.style.position = 'relative';
+      el.style.overflow = 'hidden';
+      el.addEventListener('mousedown', function(e) {
+        const rect   = el.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.style.cssText = [
+          'position:absolute',
+          'border-radius:50%',
+          'background:rgba(255,255,255,0.25)',
+          'width:0', 'height:0',
+          'transform:translate(-50%,-50%)',
+          'pointer-events:none',
+          'transition:width 0.5s ease,height 0.5s ease,opacity 0.5s ease',
+          `left:${e.clientX - rect.left}px`,
+          `top:${e.clientY - rect.top}px`,
+        ].join(';');
+        el.appendChild(ripple);
+        requestAnimationFrame(() => {
+          ripple.style.width  = '200px';
+          ripple.style.height = '200px';
+          ripple.style.opacity = '0';
+        });
+        ripple.addEventListener('transitionend', () => ripple.remove(), { once: true });
+      });
+    });
+  </script>
+</body>
+</html>
